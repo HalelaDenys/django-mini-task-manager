@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import User
+from .models import User, UserProfile
 from django.utils.translation import gettext_lazy as _
 
 
@@ -41,3 +41,22 @@ class UserAdmin(BaseUserAdmin):
 
     search_fields = ("email",)
     ordering = ("email",)
+
+
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ("user", "phone_number")
+    list_filter = ("user",)
+
+    fieldsets = (
+        (None, {"fields": ("user", "phone_number")}),
+        (
+            _("Personal info"),
+            {
+                "fields": ("job_role", "usage_purpose"),
+            },
+        ),
+    )
+
+    search_fields = ("user__email",)
+    ordering = ("user__email",)
