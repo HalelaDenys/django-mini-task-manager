@@ -10,6 +10,8 @@ class User(AbstractUser):
 
     image = models.ImageField(upload_to="users_image/", blank=True, null=True)
 
+    terms = models.BooleanField(default=False)
+
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 

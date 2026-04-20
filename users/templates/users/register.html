@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+
+{% block title %}Реєстрація — TM Manager{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-center bg-light" style="min-height: 100vh; overflow-x: hidden;">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6 col-xl-5">
+                <div class="card shadow-sm border-0 p-4 shadow-sm">
+
+                    <div class="text-center mb-4">
+                        <div class="display-4 text-success mb-2">
+                            <i class="bi bi-person-plus"></i>
+                        </div>
+                        <h2 class="fw-bold">Створити акаунт</h2>
+                        <p class="text-muted">Приєднуйтесь до TM Manager</p>
+                    </div>
+
+                    <form method="POST" action="{% url 'users:register' %}">
+                        {% csrf_token %}
+
+                        <div class="row">
+                            <!-- FIRST NAME -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small fw-bold">Ім'я</label>
+                                <input type="text"
+                                       name="first_name"
+                                       class="form-control bg-light border-0"
+                                       placeholder="Іван"
+                                       id="id_first_name"
+                                       value="{{ form.first_name.value|default:'' }}"
+                                       required>
+                                <div class="text-danger small">{{ form.first_name.errors }}</div>
+                            </div>
+                            <!-- LAST NAME -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small fw-bold">Прізвище</label>
+                                <input type="text"
+                                       name="last_name"
+                                       class="form-control bg-light border-0"
+                                       placeholder="Іванов"
+                                       id="id_last_name"
+                                       value="{{ form.last_name.value|default:'' }}">
+                                <div class="text-danger small">{{ form.last_name.errors }}</div>
+                            </div>
+                        </div>
+
+                        <!-- EMAIL -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Email адреса</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-0 border-end text-muted">
+                                    <i class="bi bi-envelope"></i>
+                                </span>
+                                <input type="email"
+                                       name="email"
+                                       class="form-control bg-light border-0"
+                                       placeholder="name@example.com"
+                                       id="id_email"
+                                       value="{{ form.email.value|default:'' }}"
+                                       required>
+                            </div>
+                            <div class="text-danger small">{{ form.email.errors }}</div>
+                        </div>
+
+                        <!-- JOB ROLE -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Ваша професія / Роль</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-0 border-end text-muted">
+                                    <i class="bi bi-briefcase"></i>
+                                </span>
+                                <select name="job_role" class="form-select bg-light border-0">
+                                    {% for value, label in form.fields.job_role.choices %}
+                                        <option value="{{ value }}"
+                                            {% if form.job_role.value == value %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- USAGE PURPOSE -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Мета використання</label>
+
+                            <div class="d-flex gap-2 align-items-center justify-content-center">
+
+                                <!-- Personal -->
+                                <input type="radio"
+                                       class="btn-check"
+                                       name="usage_purpose"
+                                       id="purpose_personal"
+                                       value="personal"
+                               {% if form.usage_purpose.value == "personal" or not form.usage_purpose.value %}
+                                   checked
+                               {% endif %}>
+
+                                <label class="btn btn-sm px-5 py-2 rounded-pill border
+                                              btn-outline-secondary"
+                                       for="purpose_personal">
+                                    <i class="bi bi-person-heart me-1"></i>
+                                    Особиста
+                                </label>
+
+                                <!-- Commercial -->
+                                <input type="radio"
+                                       class="btn-check"
+                                       name="usage_purpose"
+                                       id="purpose_commercial"
+                                       value="commercial"
+                                {% if form.usage_purpose.value == "commercial" or not form.usage_purpose.value %}
+                                       checked
+                                {% endif %}>
+
+                                <label class="btn btn-sm px-5 py-2 rounded-pill border
+                                              btn-outline-secondary"
+                                       for="purpose_commercial">
+                                    <i class="bi bi-building-up me-1"></i>
+                                    Комерційна
+                                </label>
+
+                            </div>
+                        </div>
+
+                        <!-- PASSWORD -->
+                        <div class="row border-top pt-3">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small fw-bold">Пароль</label>
+                                <input type="password"
+                                       name="password1"
+                                       class="form-control bg-light border-0"
+                                       placeholder="••••••••"
+                                       required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small fw-bold">Підтвердження</label>
+                                <input type="password"
+                                       name="password2"
+                                       class="form-control bg-light border-0"
+                                       placeholder="••••••••"
+                                       required>
+                            </div>
+                        </div>
+
+                        <div class="text-danger small">
+                            {{ form.password1.errors }}
+                            {{ form.password2.errors }}
+                            {{ form.non_field_errors }}
+                        </div>
+
+                        <div class="form-check mb-4">
+                            <input type="checkbox"
+                                   class="form-check-input"
+                                   name="terms"
+                                   id="terms"
+                                   {% if form.terms.value %}checked{% endif %}
+                                   required>
+                            <label class="form-check-label small text-muted"
+                                   for="terms">
+                                Я погоджуюся з умовами використання
+                            </label>
+
+                            <div class="text-danger small">
+                                {{ form.terms.errors }}
+                            </div>
+                        </div>
+
+                        <button type="submit"
+                                class="btn btn-success w-100 py-2 shadow-sm fw-bold rounded-3">
+                            Зареєструватися
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-4 border-top pt-3">
+                        <p class="small text-muted mb-0">Вже маєте акаунт?
+                            <a href="{% url 'users:login' %}"
+                               class="fw-bold text-decoration-none text-success">Увійти</a>
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
